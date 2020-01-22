@@ -1,0 +1,158 @@
+\ProvidesPackage{steven}
+
+\RequirePackage{amsmath}
+\RequirePackage{amsfonts}
+\RequirePackage{amssymb}		% Does not divide symbol
+\RequirePackage{amsthm}			% Theorems 
+\RequirePackage{xcolor, soul}	% Highlighting
+\RequirePackage{cancel}			    % Strikethrough math
+\RequirePackage{listings}		    % Code blocks
+\RequirePackage{enumitem}      % Custom enumerate numbering
+\RequirePackage{graphicx}        % Images
+\RequirePackage{scrextend}    % Indent
+\RequirePackage{mdframed}
+\RequirePackage{adjustbox}
+
+%\makeatletter
+%    \renewcommand*\mdf@PackageWarning[1]{}
+%\makeatother
+
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{10} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{10}  % for normal
+
+% Code highlighting
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{mygray}{gray}{0.5}
+\definecolor{lightgreen}{RGB}{0,128,0}
+\definecolor{lightyellow}{RGB}{255,255,229}
+\definecolor{cutepink}{RGB}{255,236,236}
+\definecolor{cuteblue}{RGB}{236,255,255}
+
+% Highlighter colours
+\definecolor{hblue}{RGB}{0,253,255}
+\definecolor{hmagen}{RGB}{255,64,255}
+\definecolor{hyello}{RGB}{255,255,0}
+\definecolor{hgreen}{RGB}{22,255,8}
+\definecolor{hred}{RGB}{255,0,0}
+
+% Environments for boxed stuff
+\newenvironment{boxx}
+{\mdfsetup{
+	innertopmargin=0.5em,
+	linewidth=0.5pt,
+	backgroundcolor=cutepink,
+	everyline=true
+	}
+\begin{mdframed}}
+{\end{mdframed}}
+
+\newenvironment{tboxx}[1][\unskip]
+{\mdfsetup{
+	frametitle={\setlength{\fboxsep}{0.3pt}\fbox{\colorbox{cuteblue}{\marginbox{2pt}{\space#1\space}}}},
+	innertopmargin=1em,
+	frametitleaboveskip=-0.5\ht\strutbox,
+	frametitlealignment=\center,
+	linewidth=0.5pt,
+	repeatframetitle=true,
+	backgroundcolor=cutepink,
+	everyline=true
+	}
+\begin{mdframed}}
+{\end{mdframed}}
+
+% Environments for problem sets
+\newenvironment{letprob}
+{\begin{enumerate}[label=(\alph*)] \setlength\itemsep{2em}}
+{\end{enumerate}}
+\newenvironment{numprob}
+{\begin{enumerate}[label=(\roman*)] \setlength\itemsep{2em}}
+{\end{enumerate}}
+
+% Environment for indented blocks
+\newenvironment{ind}
+{\begin{addmargin}[\leftmargin]{0em}}
+{\end{addmargin}\noindent}
+
+
+\newcommand{\hlc}[2][hgreen]{{\sethlcolor{#1}\hl{#2}}}    % Quick highlighting
+\newcommand{\fin}{\begin{flushright}\hfill $\blacksquare$\end{flushright}}    % adds QED box to end of line
+\newcommand{\q}{\item}
+\newcommand{\sol}{\par \underline{Solution:} \ }
+\newcommand{\pf}{\par \underline{Proof:} \ }
+\newcommand{\stth}{\text{ such that }}
+\newcommand{\sth}{\text{ s.t. }}
+\newcommand{\partfx}{\frac{\partial f}{\partial x}}
+\newcommand{\partx}{\frac{\partial}{\partial x}}
+\newcommand{\partfxi}{\frac{\partial f}{\partial x_i}}
+\newcommand{\partxi}{\frac{\partial}{\partial x_i}}
+\newcommand{\partfxn}{\frac{\partial f}{\partial x_n}}
+\newcommand{\partxn}{\frac{\partial}{\partial x_n}}
+\newcommand{\partfy}{\frac{\partial f}{\partial y}}
+\newcommand{\party}{\frac{\partial}{\partial y}}
+\newcommand{\pt}{\partial}
+\newcommand{\pl}{\begin{center}\hlc[red]{insert image here}\end{center}}
+
+% Sets/notation
+\newcommand{\N}{\mathbb N}        % Naturals
+\newcommand{\Z}{\mathbb Z}        % Integers
+\newcommand{\Q}{\mathbb Q}        % Rationals
+\newcommand{\R}{\mathbb R}        % Reals
+\newcommand{\cO}{\mathcal O}      % Big-Oh
+\newcommand{\cP}{\mathcal P}      % Power set
+
+% Semantic names for propositional connectives (and "logical True/False")
+\newcommand{\NOT}{\neg}
+\newcommand{\AND}{\wedge}
+\newcommand{\OR}{\vee}
+\newcommand{\IMP}{\Rightarrow}
+\newcommand{\IFF}{\Leftrightarrow}
+\newcommand{\TRUE}{\text{True}}
+\newcommand{\FALSE}{\text{False}}
+\newcommand{\IN}{\,{\in}\,}
+\newcommand{\NOTIN}{\,{\notin}\,}
+
+% Short forms for set notation
+\newcommand{\emp}{\emptyset}
+\newcommand{\bs}{\backslash}
+\newcommand{\union}{\cup}
+\newcommand{\inter}{\cap}
+
+% Macros for proofs
+\newcommand{\proofheader}[1]{\par\noindent \underline{#1}: }
+\newcommand{\base}{\proofheader{Base Case}}
+\newcommand{\istep}{\proofheader{Inductive Step}}
+
+% Python style for highlighting
+\newcommand \pythonstyle{\lstset{
+backgroundcolor=\color{lightyellow},
+language=Python,
+basicstyle=\ttm,
+otherkeywords={self},             % Add keywords here
+keywordstyle=\ttm\color{lightgreen},
+emph={MyClass,__init__},          % Custom highlighting
+emphstyle=\ttb\color{deepred},    % Custom highlighting style
+stringstyle=\color{deepred},
+frame=tb,                         % Any extra options here
+numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+numbersep=5pt,                   % how far the line-numbers are from the code
+numberstyle=\small\color{mygray}, % the style that is used for the line-numbers
+firstnumber=1,
+xleftmargin=.25in,
+showstringspaces=false            % 
+}}
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+\pythonstyle
+\lstset{#1}
+}
+{}
+
+% Python for external files
+\newcommand\pythonexternal[2][]{{
+\pythonstyle
+\lstinputlisting[#1]{#2}}}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}

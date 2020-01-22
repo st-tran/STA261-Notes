@@ -1,0 +1,252 @@
+\documentclass[letterpaper, 8pt]{extarticle}
+
+\usepackage{steven}
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{physics}
+\usepackage{oubraces}
+\usepackage{parskip}
+\usepackage{fancyhdr}
+\usepackage{multicol}
+\usepackage{titlesec}
+\usepackage{mathtools}
+\usepackage[nodisplayskipstretch]{setspace}
+
+\setstretch{0.1}
+
+\pagestyle{fancy}
+\fancyhf{}
+\setlength{\headheight}{15pt}
+\setlength{\headsep}{8pt}
+\lhead{STA261 Cheatsheet}
+\rhead{Steven Tran}
+
+\titlespacing{\section}{0pt}{\parskip}{\parskip}
+
+\titleformat{\section}
+	{\normalfont\upshape\bfseries}{\thesection}{1em}{}
+
+\pagenumbering{gobble}
+\setlength\parindent{0pt}
+\hfuzz=\maxdimen
+
+\begin{document}
+\begin{multicols*}{3}
+	\section{STA257 Basics}
+	Set stuff
+	\begin{gather*}
+		A,B\text{ disjoint}\Leftrightarrow A\cap B=\emp \\
+		A\cup B=B\cup A \\
+		(A\cup B)\cup C=A\cup (B\cup C) \\
+		(A\cup B)\cap C=(A\cap C)\cup (B\cap C)
+	\end{gather*}
+	Probability Measure:
+	\begin{gather}
+		P(\Omega)=1 \\
+		A\subset\Omega\IMP P(A)\geq 0\\
+		A_i\text{ mutually disjoint}\scriptstyle\IMP P\mqty(\bigcup_{i=1}^nA_i)=\sum_{i=1}^nP(A_i)
+	\end{gather}
+	\text{PMF} $p(x_i)$\quad\text{PDF} $f(x_i)$\quad CDF $F(x_i)$
+	\begin{gather*}
+		\shortintertext{Conditional Probability}
+		P(A|B)=P(A\cap B)/P(B)
+		\shortintertext{Law of Total Probability ($\bigcup_{i=1}^nB_i=\Omega,B_i$ disjoint, $P(B_i)>0$)}
+		P(A)=\sum_{i=1}^nP(A|B_i)P(B_i)
+		\shortintertext{Bayes': $A,B_i$ disjoint, $\sum_{i=1}^nB_i=\Omega,P(B_i)>0$, then}
+		P(B_j|A)=\frac{P(A|B_j)P(B_j)}{\sum_{i=1}^nP(A|B_i)P(B_i)}
+		\shortintertext{Multinomial Coefficient: group $n$ objects into $k$ classes, each of size $n_i$}
+		\binom{n}{n_1,\cdots,n_k}=\frac{n!}{n_1!n_2!\cdots n_k!} 
+		\shortintertext{Binomial Theorem}
+		(a+b)^n=\sum_{k=0}^n\binom{n}{k}a^kb^{n-k}
+	\end{gather*}
+	\section{Distributions}
+	Bernouilli: success ($p$) or failure ($1-p$) with $p\IN[0,1]$. $X\sim Ber(p)$ then
+	\[p(x)=\begin{cases}p^x(1-p)^{1-x}, &x=0, 1\\0&\text{otherwise}\end{cases}\]
+	Expectation $p$ Variance $(1-p)p$ MGF $q+pe^t$
+	
+	Binomial: $n$ $Ber(p)$ trials with $k$ successes. $X\sim Bin(n, p)$ then
+	\[p(k)=\binom{n}{k}p^k(1-p)^{n-k}\]
+	E $np$\quad V $npq$\quad MGF $(1-p+pe^t)^n$
+	
+	Geometric: $k$ $Ber(p)$ trials until 1 success. $X\sim Geo(p)$ then 
+	\[p(k)=p(1-p)^{k-1}\]
+	E $\frac{1}{p}$\quad V $\frac{1-p}{p^2}$\quad MGF $\frac{pe^t}{1-(1-p)e^t}$
+	\begin{gather*}
+		\sum_{n=1}^\infty az^{n-1}=\sum_{n=0}^\infty az^n \\
+		\sum_{n=1}^ka_nr^{n-1}=a_n\mqty(\frac{1-r^k}{1-r})
+	\end{gather*}
+	Neg. Binomial: $Ber(p)$ trials conducted until $r$ successes. $X\sim NB(r,p)$ then
+	\[p(k)=\binom{k-1}{r-1}p^r(1-p)^{k-r}\]
+	E $\frac{r}{p}$\quad V $\frac{rp}{(1-p)^2}$\quad MGF $\mqty(\frac{1-p}{1-pe^t})^2$
+	
+	Hypergeometric: $X\sim HG(n,m,r)$ where $n$ is the total number of items, $m$ is the number of items sampled, and $r$ is the number of items with a property, then
+	\[p(k)=\frac{\binom{r}{k}\binom{n-r}{m-k}}{\binom{n}{m}} \tag{$k\IN 0,\cdots, \min(r,m)$}\]
+	E $\frac{mr}{n}$
+	
+	Poisson: \# events. $X\sim Poi(\text{rate}=\lambda)$ then
+	\[p(k)=\frac{\lambda^ke^{-\lambda}}{k!}\]
+	E $\lambda$\quad V $\lambda$\quad MGF $e^{\lambda(e^t-1)}$
+	
+	Properties of Poisson:
+	\begin{itemize}
+		\item For $|S_i|=N_i$ independent $Poi(\lambda)$, $N_i\sim Poi(\lambda|S_i|)$
+		\item For $n$ large, $Bin(n,p)\sim Poi(np)$ can be approximated
+	\end{itemize}
+	
+	Exponential ($Gamma(1,\lambda)$): $X$ waiting time $\sim Exp(\lambda)$, then 
+	\[f(x)=\lambda e^{-\lambda x}\quad F(x)=1-e^{-\lambda x}\]
+	E $\frac{1}{\lambda}$\quad V $\frac{1}{\lambda^2}$\quad M $\frac{\lambda}{\lambda-t}$
+	
+	Gamma (sum $a$ iid $Exp(\lambda)$): $X\sim Gamma(a,\lambda)$ then
+	\[f(x)=\frac{\lambda^a}{\Gamma(a)}x^{a-1}e^{-x\lambda}\]
+	E $\frac{a}{\lambda}$\quad V $\frac{a}{\lambda^2}$\quad M $\mqty(\frac{\lambda}{\lambda-t})^a$
+	
+	Beta: used to model proportions between $0$ and $1$ with $a,b>0$ shape parameters. $X\sim Beta(a,b)$ then
+	\[f(x)=\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}x^{a-1}(1-x)^{b-1}\]
+	E $\frac{a}{a+b}$\quad V $\frac{ab}{(a+b)^2(a+b+1)}$
+	
+	Normal: $X\sim N(\mu, \sigma^2)$ then 
+	\begin{gather*}
+		f(x)=\frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x-\mu)^2}{2\sigma^2}} \\
+		\text{MGF } e^{\mu t+\frac{\sigma^2t^2}{2}}\quad f(\mu-x)=f(\mu+x) \\
+		\frac{X-\mu}{\sigma}\sim N(0,1)
+	\end{gather*}
+	Std. Normal $Z\sim N(0,1)$ $\phi(z)$ given in table
+	
+	$X_i\sim N(\mu_i,\sigma^2_i$ for $i\IN\{1,\cdots,n\}$. $Y=\sum_{i=1}^na_iX_i+b$, then
+	\[Y\sim N\mqty(\displaystyle \sum_{i=1}^na_i\mu_i+b,\sum_{i=1}^na_i^2\sigma_i^2)\]
+	
+	Chi-Square distribution: $U=Z^2$ where $Z\sim N(0,1)$, then $U\sim\chi^2_{df=1}$. If $X\sim \chi^2_{(m)}$ and $Y\sim \chi^2_{(n)}$ then $X+Y\sim \chi^2_{(m+n)}$. If $X\sim\chi^2_{(m)}$ then $E(X)=m$.
+	
+	$t$ distribution: $Z\sim N(0,1)\perp U\sim\chi^2_{(m)}$ then $\frac{Z}{\sqrt{\frac{U}{m}}}\sim t_{(m)}$, the $t$ distribution with $m$ degrees of freedom
+	
+	$F$ distribution: $X\sim\chi^2_{(m)}\perp Y\sim\chi^2_{(n)}$ then $\frac{\frac{X}{m}}{\frac{Y}{n}}\sim F(m,n)$.
+	
+	\section{Inequalities, Expectation, Variance, MGFs}
+	
+	Markov's Inequality: $P(X\geq 0)=1, E(X)$ exists then 
+	\[P(X\geq t)\leq \frac{E(X)}{t}\]
+	Chebyshev's Inequality: $P(|X-\mu|>t)\leq\frac{\sigma^2}{t^2}$ (proof: set $Y=(x-\mu)^2$ and apply Markov))
+	\begin{gather*}
+		\text{r-th moment}=E(X^r) \\
+		\text{r-th central moment}=E\mqty[(X-E(X))^r]\\
+		M(t)=E(e^{tX})\\
+		X\perp Y\IMP M_{X+Y}=M_XM_Y\\
+		M_{XY}(s,t)=E(e^{sX+tY})\\
+		M^{(r)}(0)=E(X^r)\\
+		E(X)=\sum_ix_ip(x_i)\quad E(X)=\int_\R xf(x)\dd x \tag{provided these converge} \\
+		Y=g(X)\IMP E(Y)=\sum_ig(x_i)p(x_i) \\ E(Y)=\int_\R g(x)f(x)\dd x \\
+		E(aX+b)=aE(X)+E(b)\quad E(XY)=E(X)E(Y) \tag{if $X\perp Y$} \\
+		Var(X)=E\mqty[(X-E(X))^2]\\
+		=E(X^2)-(E(X))^2=\int_\R(x-\mu)f(x)\dd x \\
+		sd=\sqrt{Var(X)} \\
+		Y=aX+b\IMP Var(Y)=a^2Var(X)
+	\end{gather*}
+	\section{Conditional \& Multivariate Stuff}
+	Law of Total Expectation
+	\begin{gather*}
+		E(Y)=E(E(Y|X)) 
+		\shortintertext{Law of Total Variance}
+		Var(Y)=Var(E(Y|X))+E(Var(Y|X))\\
+		p_{xy}(x,y)=p_{X|Y}(x|y)p_y(y)\\
+		p_x(x)=\int_yp_{xy}(x,y)\dd y\\
+		E(Y)=\idotsint \underbrace{g(x_1,\cdots,x_n)}_\text{may do nothing}f(x_1,\cdots,x_n)\dd \{x_i\}\\
+		E(Y|X=x)=\sum_yp_{Y|X}(y|x) \\
+		E(h(Y)|X=x)=\int_yh(Y)f_{Y|X}(y|x)\dd y\\
+		\shortintertext{$X_i\perp X_j$ then $Var(\sum x_i)=\sum Var(X_i)$ and $Cov(X_i,X_j)=0$)}\\
+		Cov(X,Y)=E\mqty[(X-\mu_X)(Y-\mu_Y)]\\
+		=E(XY)-E(X)E(Y)\\
+		Cov(a+X,Y)=Cov(X,Y)\\
+		Cov(aX,bY)=abCov(X,Y)\\
+		Cov(X,Y+Z)=Cov(X,Y)+Cov(X,Z)\\
+		Var(X+Y)=Var(X)+Var(Y)+2Cov(X,Y)\\
+		\begin{align*}
+			Cov(aW+bX,cY+dZ)&=acCov(W,Y)+bcCov(X,Y)\\
+			&+adCov(W,Z)+bdCov(X,Z)
+		\end{align*}\\
+		Var(a+\sum b_ix_i)=\sum_{i,j}b_ib_jCov(x_i,x_j)
+	\end{gather*}
+	\newpage
+	\section{Limit Theorems}
+	Law of Large Numbers: $X_1,X_2,\cdots,X_i,\cdots$ independent and $E(X_i)=\mu$, $Var(X_i)=\sigma^2$, $\bar X_n=\frac{1}{n}\sum_{i=1}^nX_i$. 
+	
+	Then $\forall\epsilon>0, P(|\bar X_n-\mu|>\epsilon)\overset{n\to\infty}{\longrightarrow} 0$ by Chebyshev's inequality.
+	
+	Convergence in Distribution: $X_1,\cdots$ are random variables with $F_1,\cdots$, and $X$ has cdf $F$. $X_n\overset{D}{\longrightarrow}X$ if $F_n(X)\overset{D}{\rightarrow}F(X)$ wherever $F$ is continuous.
+	\begin{itemize}
+		\item the next outcome (as we get more and more $X_i$s) converge closer and closer to some cdf
+		\item to show converge in distribution, we usually use MGFs. Call $\{F_n\}$ a sequence of cdfs with MGFs $\{M_n\}$. 
+		\[\overbrace{M_N(t)\to M(t)}^{\forall t\IN I\sth 0\IN t}\IMP F_n(x)\to F(x)\]
+		since the MGF uniquely determines the distribution of a RV.
+	\end{itemize}
+	
+	Central Limit Theorem: $X_1,\cdots$ iid with mean $\mu$, variance $\sigma^2$, cdf $F$, MGF $M$ defined in a neighbourhood of $0$. Let $S_n=\sum_{i=1}^n X_i$. Then $\bar X_n\overset{D}{\to}N(\mu,\frac{\sigma^2}{n})$ or $\frac{\bar X_n-\mu}{\frac{\sigma}{\sqrt n}}\overset{D}{\to}N(0,1)$ or $P\mqty(\frac{S_n}{\sigma\sqrt x}\leq x)\rightarrow\phi(x)$.
+	
+	Proof: $M_{S_n}(t)=\mqty(M_x(t))^n,M_{Z_n}(t)=\mqty(M_x\mqty(\frac{t}{\sigma\sqrt x}))^n,M_X(s)=M_X(0)+SM'(0)+\frac{S^2}{2}M''(0)+\epsilon_S$ with $\frac{\epsilon_S}{S^2}\to 0$. This equals $1+\frac{1}{2}\sigma^2+\mqty(\frac{t}{\sigma\sqrt x}))^2+\epsilon_n$, so $M_{Z_n}(t)=\mqty(1+\frac{t^2}{2n}+\epsilon_n)^n\to e^{\frac{t^2}{2}}$ hence $Z_n\sim N(0,1)$.
+	
+	\section{Definitions}
+	\begin{itemize}
+		\item Population: a collection of all the subjects that have something in common.
+		\item[$\to$] Parameter: a characteristic/summary of the population, represented by $\theta$. Can be mean ($\mu$), std. dev ($\sigma$), etc.
+		\item Sample: a subset of the population. We use the sample to make an inference about the unknown parameters of our population.
+		\item[$\to$] Statistic: any summary of the sample; since statistics/estimators are a function of sample observations, we use $T$ to represent them. Examples: sample total ($\sum X_i$), sample mean ($\bar X$), etc.
+	\end{itemize}
+	\begin{center}	
+	\begin{tabular}{|c|c|c|}
+		\hline
+		parameter & estimator & estimate \\\hline
+		$\mu$ & $\bar X=\frac{\sum X}{n}$ & $\bar x=\frac{\sum x}{n}$ \\
+		$\sigma$ & $S$ & $s$\\\hline
+	\end{tabular}
+	\end{center}
+	
+	\section{Method of Moments}
+	$X_1,\cdots,X_n$ iid RVs. Define the k-th population moment to be $\mu_k=E(X^k)$ and the k-th sample moment to be $\hat\mu_k=\frac{1}{n}\sum_{i=1}^nX_i^k$. We use $\hat\mu_k$ as an estimator of $\mu_k$ using 3 steps:
+	\begin{enumerate}
+		\item express lower order population moments in terms of the parameters
+		\item invert the expressions to express the parameters in terms of the population moments
+		\item replace the population moments using the sample moments
+	\end{enumerate}
+	\section{Likelihood}
+	$X_1,\cdots,X_n$ RVs with joint density/mass function $f(x_1,\cdots,x_n|\theta)$. Given a sample $(x_1,\cdots,x_n)$, the likelihood function of $\theta$ is defined as
+	\[L(\theta):=L(\theta|x_1,\cdots,x_n)=f(x_1,\cdots,x_n|\theta)\]
+	where the likelihood is intuitively the probabilility of the parameter being some value given the sample data. If $X_1,\cdots,X_n$ are iid, then we can express the joint as the product of the marginal densities, i.e.
+	\[L(\theta)=\prod_{i=1}^nf_\theta(x_i)\]
+	Suppose we have $\theta$ with likelihood function $L(\theta)$. The best point estimate can be found by picking a $\hat\theta$ that maximizes $L(\theta)$, i.e. $\hat\theta$ satisfies $L(\hat\theta)\geq L(\theta)\quad \forall\theta\IN\Omega$.
+	
+	Usually, we compute the MLE by optimizing the log-likelihood $\ell(\theta)$ ($\ln x$ is one-to-one and increasing). Solve $\pdv{\ell(\theta)}{\theta}=0$ for $\theta$ and check that $\left.\pdv[2]{\ell(\theta)}{\theta}\right|_{\theta=\hat\theta}<0$.
+	
+	Invariance property: suppose $\hat\theta$ is the MLE of $\theta$ and let $\psi(\theta)$ be any 1-1 function of $\theta$ defined on $\Omega$, then $\psi(\hat\theta)$ is the MLE of $\psi(\theta)$.
+	
+	Fisher Information
+	\begin{align*}
+		I(\theta)&=E\mqty[\displaystyle\pdv{\theta}\ln f(X|\theta)]^2
+		\shortintertext{also, if $f$ is sufficiently smooth (in order to bring operation in integration when finding expectation),}
+		&=-E\mqty[\displaystyle\pdv[2]{\theta}\ln f(X|\theta)]
+	\end{align*}
+	
+	The large sample distribution of a MLE is approximately normal with mean $\theta_0$ and variance $\frac{1}{nI(\theta_0)}$. Moreover, the asymptotic variance is given by
+	\[\underbrace{Var(\hat\theta)\geq\frac{1}{nI(\theta_0)}}_\text{Cram\'er-Rao Bound}=-\frac{1}{E\ell''(\theta_0)}\]
+	
+	\section{Mean Squared Error \& Bias}
+	Let $\theta$ be a parameter, $\psi(\theta)$ be a real-valued function, and $T$ be an estimator of $\psi(\theta)$. The Mean Squared Error is defined as
+	\begin{align*}
+		MSE_\theta(T)&=E_\theta[(T-\psi(\theta))^2\\
+		&=Var_\theta(T)+(E_\theta(T)-\psi(\theta))^2 \tag{*}\\
+		&=Var_\theta(T)+(Bias(T))^2
+	\end{align*}
+	Proof (*): Add $-E(T)+E(T)$ to inner term in definition of MSE, expand using squares.
+	\[\text{Bias}:=E_\theta(T)-\psi(\theta)\]
+	When the bias of an estimator is 0, it is unbiased.
+	
+	\section{Quiz 1 Problems}
+	\begin{enumerate}[label=\alph*), wide, labelwidth=!, labelindent=0pt]
+		\item (Rice E8Q4) Suppose $X$ is a discrete random variable with $P(X=0,1,2,3)=\frac{2}{3}\theta,\frac{1}{3}\theta,\frac{2}{3}(1-\theta),\frac{1}{3}(1-\theta)$ respectively where $\theta\IN[0,1]$ and 10 observations were taken: $(3,0,2,1,3,2,1,0,2,1)$. 
+		
+		Method of moments estimate of $\theta$: $E(X)=\sum_{k=0}^3kP(X=k)=\frac{\theta}{3}+\frac{4}{3}(1-\theta)+(1-\theta)=\frac{7}{3}-2\theta$. We rearrange for $\theta$ and write the sample mean $\bar X$ in place of $E(X)$: $\hat\theta=\frac{7}{6}-\frac{1}{2}\bar X$ which yields $\hat\theta=0.417$.
+		
+		Standard error: we need to calculate the variance of $X$ ($Var(X)=E(X^2)-(E(X))^2$). The process yields $E(X^2)=\frac{17-16\theta}{3}$ so $Var(X)=-4\theta^2+4\theta+\frac{2}{9}$. $Var(\bar X)=Var(\frac{1}{n}\sum_{i=1}^nX_i)=\frac{1}{n^2}Var(X_i)=\frac{1}{n}Var(X_1)$. 
+		
+		$Var(\hat\theta)=\frac{1}{4}Var(\bar X)=-\frac{1}{10}\theta^2+\frac{1}{10}\theta+\frac{1}{180}$. We replace $\theta$ with $\hat\theta=0.417$, yielding that $s_{\hat\theta}^2=0.0299$ and the standard deviation is simply the square of this.
+	\end{enumerate}
+\end{multicols*}
+\end{document}
