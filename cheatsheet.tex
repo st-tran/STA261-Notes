@@ -266,5 +266,122 @@
 		
 		The expected value of our posterior distribution is given by $E(P|X)=\frac{n}{n+\sum_{i=1}^nx_i-n}$ (again, using the mean of a Beta distribution).
 	\end{enumerate}
+	
+	\newpage
+	\section{Types of Convergence}
+	\begin{itemize}
+		\item Convergence in distribution: $Z_n\overset{d}{\to}Z$ if $\displaystyle\lim_{n\to\infty}F_n(x)=F(x)$ everywhere $F$ is continuous
+		\item Convergence in probability: $Z_n\overset{P}{\to}Z$ if $\displaystyle\lim_{n\to\infty}P(|Z_n-Z)|>\epsilon)=0$
+		\item Almost-surely convergence: $Z_n\overset{a.s.}{\to}Z$ if $P(\displaystyle\lim_{n\to\infty}Z_n=Z)=1$
+	\end{itemize}
+	\section{Unbiased Estimator for $\sigma^2$}
+	We have that the population variance is
+	\[\sigma^2=\frac{1}{N}\sum_{i=1}^N(X_i-\mu)^2\]
+	and we have may want to estimate it using $\frac{1}{n-1}\sum_{i=1}^n(X_i-\bar X)^2$ or $\frac{1}{n}\sum_{i=1}^n(X_i-\bar X)^2$. The first is unbiased, and the other one (given by both the method of moments \& MLE estimation) is biased. Proof:
+	\begin{align*}
+		\sum_i(X_i-\mu)^2&=\sum_i(X_i-\bar X+\bar X-\mu)^2\\
+		&=\sum_i\left[(X_i-\bar X)^2+(\bar X-\mu)^2\right.\\
+		&+\left.2(X_i-\bar X)(\bar X-\mu)\right]\\
+		&=n\hat\sigma^2+n(\bar X-\mu)^2+0(\bar X-\mu)\\
+		&=\sum_i(X_i-\bar X)^2+n(\bar X-\mu)^2\\
+		\sum_i(X_i-\bar X)^2&=\sum_i(X_i-\mu)^2-n(\bar X-\mu)^2
+		\shortintertext{Take expectation on both sides:}
+		E[\cdots]&=\sum_iVar(X_i)-nVar(\bar X)\\
+		&=\sum_i\sigma^2-n\frac{\sigma^2}{n}=n\sigma^2-\sigma^2\\
+		&=(n-1)\sigma^2
+	\end{align*}
+	Another method for the normal distribution: it can be shown that $\bar X$ and $S^2$ are independent, and $\frac{(n-1)S^2}{\sigma^2}\sim\chi^2_{(n-1)}$. Starting with the equation before we took the expectation, we can divide it by $\sigma^2$ to obtain
+	\[\sum_i\left(\frac{X_i-\mu}{\sigma}\right)^2=\frac{(n-1)S^2}{\sigma^2}+\left(\frac{\bar X-\mu}{\sigma/\sqrt n}\right)^2\]
+	where $\sum_i\left(\frac{X_i-\mu}{\sigma}\right)^2\sim\chi^2_{(n)}$ and $\left(\frac{\bar X-\mu}{\sigma/\sqrt n}\right)^2\sim\chi^2_{(1)}$. So we can use MGFs and the independence of $\bar X$ and $S^2$ to find that $\frac{(n-1)S^2}{\sigma^2}\sim\chi^2_{(n-1)}$. Since the expectation of a Chi Square variable is just its degrees of freedom we have that $E(S^2)=\sigma^2$ so $S^2$ is an unbiased estimator of $\sigma^2$ under the normal distribution.
+	
+	\section{Sufficient Statistic}
+	Roughly, a sufficient statistic for a parameter is a summary of a sample which yields the same information about the parameter as the entire sample (data reduction). Formally, a statistic $T(X_1,\cdots,X_n)$ is sufficient for $\theta$ if the conditional distribution of $X_1,\cdots,X_n$ given $T=t$ doesn't depend on $\theta$.
+	
+	\textbf{Factorization Theorem}: $T(X_1,\cdots,X_n)$ is sufficient for $\theta$ if the joint probability function factors in the form
+	\begin{align*}
+		&f(x_1,\cdots,x_n|\theta) \\
+		=\ &g(T(x_1,\cdots,x_n),\theta)h(x_1,\cdots,x_n)
+	\end{align*}
+	where $h$ is a function of sample observations and $g$ involves $\theta$ and the sufficient statistic $T$.
+	
+	It is also useful to identify distributions in the exponential family of distributions. We can express the density or frequency functions in the form
+	
+	\[f(x|\theta)=\begin{cases}
+	e^{c(\theta)T(x)+d(\theta)+S(x)}, & x\IN A\\
+	0, & x\not\in A
+	\end{cases}\]
+	Such distributions include the  normal, exponential, log-normal, gamma, chi-squared, beta, Dirichlet, Bernoulli, categorical, Poisson, geometric, inverse Gaussian, von Mises and von Mises-Fisher distributions. Some distributions are exponential families only if some of their parameters are held fixed. {\tiny The family of Pareto distributions with a fixed minimum bound $x_m$ form an exponential family. The families of binomial and multinomial distributions with fixed number of trials n but unknown probability parameter(s) are exponential families. The family of negative binomial distributions with fixed number of failures (a.k.a. stopping-time parameter) r is an exponential family. However, when any of the above-mentioned fixed parameters are allowed to vary, the resulting family is not an exponential family.} As mentioned above, as a general rule, the support of an exponential family must remain the same across all parameter settings in the family.
+	
+	\section{Consistent Estimators}
+	In this course, consider only estimators being consistent in probability. 
+	
+	Immediate results: the LLN tells use that $\bar X=\frac{1}{n}\sum X_i\overset{P}{\to}E(X_i)$ for any distribution, so $\bar X$ is a consistent estimator of $\mu$ for $X_i\overset{iid}{\sim}N(\mu,\sigma^2)$, $\bar X$ is a consistent estimator of $\lambda$ for $X_i\overset{iid}{\sim}Poi(\lambda)$, etc.
+	
+	\textbf{Slutsky's lemma}: $X_n, Y_n$ are sequences.
+	\begin{gather*}
+		X_n\overset{P}{\to}X, Y_n\overset{P}{\to}Y\IMP X_n+Y_n\overset{P}{\to}X+Y \\
+		X_n\overset{P}{\to}X, Y_n\overset{P}{\to}Y\IMP X_nY_n\overset{P}{\to}XY
+	\end{gather*}
+	\textbf{Continuous mapping theorem}: $X_n\overset{P}{\to}X$ and $g$ continuous. Then $g(X_n)\overset{P}{\to}g(X)$
+	
+	\textbf{MSE consistent}: an estimator $T_n$ is MSE consistent if $MSE(T_n)\overset{n\to\infty}{\longrightarrow}0$
+	
+	We have that the MLE is consistent. Let $\theta_0$ represent the true value of the parameter which produced the data (unknown, constant) let $X_i\overset{iid}{\sim} f(x|\theta_0)$, and let $\hat\theta$ be the MLE. Proof that $\hat\theta\overset{P}{\to}\theta_0$: start with the log likelihood $\ell(\theta)=\sum_{i=1}^n\log f(X_i|\theta)$. Divide both sides by the sample size $n$ and apply LLN.
+	
+	Since $\frac{1}{n}\ell(\theta)$ gets closer to $E(\log f(X_i|\theta))$, the $\theta$ that maximizes $\frac{1}{n}\ell(\theta)$ should be closed to the $\theta$ that maximizes $E(\log f(X_i|\theta))$. We can show that $E(\log f(X_i|\theta))$ is maximized at $\theta_0$.
+	
+	\section{Score and Fisher Information}
+	The score function is the derivative of the log likelihood, 
+	\[S(\theta)=\pdv{\theta}\ell(\theta)=\ell'(\theta)\]
+	and the solution to the score equation 
+	\[S(\theta)=0\]
+	is the MLE. We say that $\left.S(\theta)\right|_{\theta=\hat\theta}=0$.
+	
+	The score as a random variable for iid $X_i$ has that
+	\begin{align*}
+		S(\theta|X_i)&=\pdv{\theta}\sum_i\log f(X_i|\theta)\\
+		&=\sum_i\pdv{\theta}\log f(X_i|\theta)=\sum_iS(\theta|X_i)
+	\end{align*}
+	They key takeaway is that $S(\theta)$ is random; for a different set of observations, the likelihood function varies. 
+	
+	The Fisher Information is defined by
+	\begin{align*}
+		I(\theta_0)&=Var\left(S(\theta|X)|_{\theta=\theta_0}\right)\\
+		&=E\left(\pdv{\theta}\left.\log f(X|\theta)\right|_{\theta=\theta_0}\right)^2\\
+		&=-E\left(\pdv[2]{\theta}\log f(X|\theta)|_{\theta=\theta_0}\right)
+	\end{align*}
+	and is the amount of information that each observable random variable $X$ contains about $\theta$.
+	\section{Quiz 2 Problems}
+	\begin{enumerate}[label=\alph*), wide, labelwidth=0pt, labelindent=0pt]
+		\item (W4 Notes) Suppose $X_1,X_2,X_3\overset{iid}{\sim}Poi(\lambda)$. Verify that $T=\sum_{i=1}^3X_i$ is a sufficient statistic for $\lambda$.
+		\begin{align*}
+			&P(X_1=x_1,\cdots,X_3=x_3|\sum x_i=t)\\
+			&=\frac{P(X_1=x_1,\cdots,X_3=x_3,\sum x_i=t)}{P(\sum x_i=t)}\\
+			&=\frac{P(X_1=x_1,\cdots,X_3=t-(x_1+x_2))}{P(\sum x_i=t)}\\
+			&=\frac{\frac{\cancel{e^{-\lambda}}\lambda^{x_1}}{x_1!}\frac{\cancel{e^{-\lambda}}\lambda^{x_2}}{x_2!}\frac{\cancel{e^{-\lambda}}\lambda^{t-(x_1+x_2)}}{(t-(x_1+x_2))!}}{\frac{\cancel{e^{-3\lambda}}(3\lambda)^t}{t!}}\\
+			&=\frac{\cancel{\lambda^t}}{x_1!x_2!}\frac{t!}{(3\cancel{\lambda})^t}=\frac{t!}{x_1!x_2!3^t}
+		\end{align*}
+		which doesn't depend on $\lambda$.
+		
+		\item (W4 Notes) Factorization theorem for $Poi(\lambda)$:
+		\begin{align*}
+			L(\lambda)&=e^{n\lambda}\lambda^{\sum x_i}\frac{1}{\prod x_i!}\\
+			&=g\left(\sum_{i=1}^nx_i,\lambda\right)h(x_1,\cdots,x_n)
+		\end{align*}
+		so $T=\sum x_i$ is a sufficient statistic for $\lambda$.
+		
+		\item (W4 Notes) Score \& Fisher Information using Poisson Distribution
+		
+		Let $X_1,\cdots,X_n\overset{iid}{\sim}Poi(\lambda)$ with $\lambda_0$ parameter. 
+		\begin{align*}
+			L(\lambda)&=\prod f(X_i|\theta)\\
+			&=\prod\frac{e^{-\lambda}\lambda^{\sum X_i}}{\prod X_i!}\\
+			\ell(\lambda)&=-n\lambda +(\sum X_i)\ln\lambda-\sum\ln(X_i)!\\
+			\pdv{\lambda}\ell(\lambda)&=-n+\frac{\sum X_i}{\lambda}\\
+			I(\lambda_0)&=Var(S(\lambda|X)|_{\lambda=\lambda_0})\\
+			&=Var\left(-1+\frac{X}{\lambda_0}\right)\\
+			&=\frac{1}{\lambda^2_0}Var(X)=\frac{1}{\lambda_0}
+		\end{align*}
+	\end{enumerate}
 \end{multicols*}
 \end{document}
