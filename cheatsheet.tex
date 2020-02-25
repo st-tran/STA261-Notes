@@ -229,7 +229,15 @@
 	\end{align*}
 	
 	The large sample distribution of a MLE is approximately normal with mean $\theta_0$ and variance $\frac{1}{nI(\theta_0)}$. Moreover, the asymptotic variance is given by
-	\[\underbrace{Var(\hat\theta)\geq\frac{1}{nI(\theta_0)}}_\text{Cram\'er-Rao Bound}=-\frac{1}{E\ell''(\theta_0)}\]
+    \[\underbrace{Var(\hat\theta)\geq\frac{1}{nI(\theta_0)}}_\text{Cram\'er-Rao Bound}=-\frac{1}{E\ell''(\theta_0)}\]
+    
+    Proof: consider the correlation coefficient $\rho$ between two variables $Y,Z$, which is bounded between $-1$ and $1$.
+    Then
+    \begin{align*}
+        \rho^2(T,S()\theta))&\leq 1 \\
+        \frac{(\text{cov}(T,S(\theta)))^2}{\text{var}(T)\text{var}(S(\theta))}&\leq 1 \\
+        \IMP \text{var(T)}&\geq\frac{(\text{cov}(T,S(\theta)))^2}{\text{var}(S(\theta))}
+    \end{align*}
 	
 	\section{Mean Squared Error \& Bias}
 	Let $\theta$ be a parameter, $\psi(\theta)$ be a real-valued function, and $T$ be an estimator of $\psi(\theta)$. The Mean Squared Error is defined as
@@ -382,6 +390,57 @@
 			&=Var\left(-1+\frac{X}{\lambda_0}\right)\\
 			&=\frac{1}{\lambda^2_0}Var(X)=\frac{1}{\lambda_0}
 		\end{align*}
-	\end{enumerate}
+    \end{enumerate}
+    \newpage
+    \section{Efficiency}
+    For two estimators $T_1,T_2$ of a statistic $\theta$, the efficiency of $T_1$ relative to $T_2$ is
+    \[\text{eff}(T_1,T_2)=\frac{\text{var}(T_2)}{\text{var}(T_1)}\]
+    A more efficient estimator has a smaller variance, and the most efficient unbiased estimator achieves the Cram\`er-Rao Lower Bound.
+
+    \section{Distribution of MLE}
+    Under some conditions, as $n\to\infty$, 
+    \[\frac{\hat\theta-\theta_0}{\sqrt{\frac{1}{n}I(\theta_0)}}\overset{D}{\to}N(0,1)\]
+    As a consequence, for large $n$, $E(\hat\theta)=\theta_0$ and $V(\hat\theta)=\frac{1}{nI(\theta_0)}$.
+
+    Proof: we have that $\ell'(\hat\theta)=0, E(\ell'(\theta_0))=0), \ell'(\theta_0)\overset{D}{\to}N(0,nI(\theta_0))$ so $\frac{1}{n}\ell'(I(\theta_0))\overset{D}{\to}N(0,\frac{1}{n}I(\theta_0))$. 
+    
+    Additionally, by LLN, $\frac{1}{n}\ell''(\theta_0)\overset{P}{\to}-I(\theta_0)$. 
+
+    We then use the Taylor series expansion of $\ell'(\hat\theta)$ around $\theta_0$ to find that
+    \[\hat\theta-\theta_0\approx-\frac{\ell'(\theta_0)}{\ell''(\theta_0)}=\frac{\frac{1}{n}\ell'(\theta_0)}{-\frac{1}{n}\ell''(\theta_0)}\]
+    And with this we obtain the result. Additionally, the MLE is: asymptotically unbiased, a function of sufficient statistics, consistent, and asymptotically efficient.
+
+    \section{Confidence Intervals}
+    Some sampling distributions:
+    \begin{itemize}
+        \item $X_1,\cdots,X_n\overset{iid}{\sim}N(\mu,\sigma^2)$:
+        \begin{gather*}
+            \frac{\bar X-\mu}{\sigma/\sqrt n}\sim N(0,1) \\
+            \frac{\bar X-\mu}{S/\sqrt n}\sim t_{(n-1)} \\
+            \frac{(n-1)S^2}{\sigma^2}\sim\chi^2_{(n-1)}
+        \end{gather*}
+        \item Distribution of MLE (above)
+    \end{itemize}
+    $\gamma$-Confidence interval: intuitively, some interval which will have at least $\gamma$ chance of containing the true parameter. $C(X_1,\cdots,X_n)=(l(X_1,\cdots,X_n),u(X_1,\cdots,X_n))$ is a $\gamma$ confidence interval for $\psi$ if $P(l()\leq\psi(\theta)\leq u)\geq\gamma$ for every $\theta\IN\Omega$.
+
+    Pivotal Quantity: a random variable defined in terms of the sample; involves the unknown parameters in its expression, but the distribution of this quantity doesn't depend on the parameters.
+
+    For each of the sampling distributions above, we can use the $z, t$, or $\chi^2$ distributions to calculate the necessary quantiles which correspond to $\gamma$. We use the standard normal for $\mu$ when $\sigma^2$ is known, the $t$ distribution for $\mu$ when $\sigma^2$ is unknown, and the $\chi^2$ distribution for $\sigma^2$. 
+    
+    For two-sided confidence intervals, notice that the $Z,t$ distributions are symmetric about their means so the shortest interval is also symmetric about the mean. For the $chi^2$ distribution, we use $\frac{1\pm\gamma}{2}$ even though it may not yield the shortest interval (its shape is determined by the degrees of freedom).
+
+    For MLE-based confidence intervals, the confidence interval is given by
+    \[\hat\theta\pm z_{(\frac{1+\gamma}{2})}\sqrt{\frac{1}{nI(\theta_0)}}\]
+    where $\hat\theta$ is the MLE and we use either a plug-in estimate of the Fisher Information (replace $\theta_0$ by $\hat\theta$) or the observed Fisher Information (replace $\theta_0$ with summary of observed data).
+
+    For one-sided confidence intervals, we consider one side of each distribution.
+
+    Interpretation:
+    \begin{itemize}
+        \item For $z,t$ intervals, the sample mean is the midpoint of the lower and upper bound. The width of the interval is given by $u-l$, and the margin of error is half of the width.
+        \item The width of the interval increases as the confidence level increases or the standard deviation ($\sigma,s$) increases
+        \item The width of the interval decreases as the sample size increases
+        \item CIs are not fixed numbers but rather random variables; ``there is a 95\% chance that $\mu$ is between 4.442 and 5.318 is incorrect.'' Rather, we should say, ``if we keep taking samples and construct 0.95-CIs, 95\% of the confidence intervals will capture the true value of the parameter.''
+    \end{itemize}
 \end{multicols*}
 \end{document}
