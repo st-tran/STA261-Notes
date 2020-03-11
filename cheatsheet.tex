@@ -441,6 +441,74 @@
         \item The width of the interval increases as the confidence level increases or the standard deviation ($\sigma,s$) increases
         \item The width of the interval decreases as the sample size increases
         \item CIs are not fixed numbers but rather random variables; ``there is a 95\% chance that $\mu$ is between 4.442 and 5.318 is incorrect.'' Rather, we should say, ``if we keep taking samples and construct 0.95-CIs, 95\% of the confidence intervals will capture the true value of the parameter.''
-    \end{itemize}
+	\end{itemize}
+	
+	\section{Hypothesis Tests}
+	Null Hypothesis, $H_0$: the hypothesis we want to test with respect to the parameter. Usually will be a simple hypothesis (parameter takes a single value from the parameter space).
+
+	Alternative Hypothesis, $H_A$ or $H_1$: other values the parameter of interest can take on. Usually will be a composite hypothesis.
+
+	We use test statistics which, under the null hypothesis, will have a known distribution. Some of the pivotal quantities used to construct confidence intervals are useful for the critical region or $p$-value approach.
+
+	Critical region, $R_\alpha(T)$ ($\alpha\IN[0,1]$): a region of the distribution of the test statistic under the null hypothesis such that we reject $H_0$ if $T(X)\IN R_\alpha(T)$.
+	\[P[T(X)\IN R_\alpha(T)|H_0\text{ true}]=\alpha\]
+
+	$p$-value: the smallest level of significance at which $H_0$ would be rejected based on the observed data, or the probability of observing the result as or more extreme than what was actually observed if $H_0$ is true. We reject $H_0$ if the $p$-value is less than a cutoff (conventionally, $0.01,0.05,0.1$).
+
+	Some example $p$-values for two-sided tests:
+
+	\begin{gather*}
+		2\left(1-\Phi\left(\left|\frac{\bar x-\mu_0}{\sigma/\sqrt n}\right|\right)\right) \tag{z test} \\
+		2\left(1-G\left(\left|\frac{\bar x-\mu_0}{s/\sqrt n}\right|\right)\right) \tag{t test}
+	\end{gather*}
+
+	\begin{center}
+		\begin{tabular}{c|c|c}
+			\hline
+			& fail to reject $H_0$ & reject $H_0$ \\\hline
+			$H_0$ true & correct & type 1 ($\alpha$) \\\hline
+			$H_0$ false & type 2 ($\beta$) & correct \\\hline
+		\end{tabular}
+	\end{center}
+	Notice that $\alpha,\beta$ are inversely related. 
+
+	Power of a test: $1-\beta$. We calculate this using the density under $H_1$; start with finding $R_a$ given $H_0$, and then calculate the probability of having data within the rejection region given $H_1$.
+
+	\section{Tests of Two Populations}
+	By constructing other test statistics, we can reduce a hypothesis test involving two population parameters to one of the previous tests.
+
+	Consider two independent normal samples
+	\begin{gather*}
+		X_1,\cdots,X_n\sim N(\mu_x,\sigma^2_x) \\
+		Y_1,\cdots,Y_m\sim N(\mu_y,\sigma^2_y)
+	\end{gather*}
+	Say we want to test $H_0:\sigma^2_x=\sigma^2_y$ vs $H_1:\sigma^2_x\neq\sigma^2_y$, then using an $F$ distribution, we can write
+	\[\frac{S^2_x/\sigma^2_x}{S^2_y/\sigma^2_y}\sim F_{n-1,m-1}\]
+	Under $H_0$, $\frac{S^2_x}{S^2_y}\sim F_{n-1,m-1}$ and the rejection region is $(-\infty, F_{\alpha/2,(n-1,m-1))})\cup (F_{1-\alpha/2,(n-1,m-1)}, \infty)$
+
+	Say we want to test $H_0:\mu_x=\mu_y$ ($\mu_x-\mu_y$) vs $H_1:\mu_x\neq \mu_y$ with $\sigma_x,\sigma_y$ known. We can use $\bar X,\bar Y$ to estimate each parameter respectively, giving
+	\begin{gather*}
+		\bar X-\bar Y\sim N\left(\mu_x-\mu_y,\sigma^2_x/n+\sigma^2_y/m\right) \\
+		\frac{(\bar X-\bar Y)-(\mu_x-\mu_y)}{\sqrt{\sigma^2_x/n+\sigma^2_y/m}}\sim N(0,1)
+		\intertext{and under $H_0$}
+		\frac{(\bar X-\bar Y)}{\sqrt{\sigma^2_x/n+\sigma^2_y/m}}\sim N(0,1)
+	\end{gather*}
+	Also if we know $\sigma_x=\sigma_y=\sigma$, we can factor out the population variance term in the denominator above.
+
+	Say we want to test  $H_0:\mu_x=\mu_y$ ($\mu_x-\mu_y$) vs $H_1:\mu_x\neq \mu_y$ with $\sigma_x,\sigma_y$ unknown but equal. Then
+	\begin{align*}
+		\frac{(n-1)S^2_x}{\sigma^2}+\frac{(m-1)S^2_y}{\sigma^2}&\sim\chi^2_{(n+m-2)}\\
+		\frac{1}{\sigma^2}((n-1)S^2_x+(m-1)S^2_y)&\sim\chi^2_{(n+m-2)}
+		\intertext{and using the def'n of a $t$-distribution}
+		\frac{\frac{\bar X-\bar Y}{\sigma\sqrt{1/n+1/m}}}{\sqrt{\frac{\frac{1}{\sigma^2}[(n-1)S^2_x+(m-1)S^2_y]}{n+m-2}}}&\sim t_{n+m-2}\\
+		\frac{\bar X-\bar Y}{\sqrt{\frac{(n-1)S^2_x+(m-1)S^2_y}{n+m-2}}\sqrt{\frac{1}{n}+\frac{1}{m}}}&\sim t_{n+m-2}\\
+		\frac{\bar X-\bar Y}{S_p\sqrt{\frac{1}{n}+\frac{1}{m}}}&\sim t_{n+m-2}
+	\end{align*}
+	we call $S^2_p=\sqrt{\frac{(n-1)S^2_x+(m-1)S^2_y}{n+m-2}}$ the pooled sample variance.
+
+	In this case, we use the test statistic $\frac{\bar X-\bar Y}{\sqrt{\frac{S^2_x}{n}+\frac{S^2_y}{m}}}$ which is approximated using a $t$ distribution with a complicated form of the degrees of freedom (not in this course).
+
+	For paired (dependent) data $X,Y$, we can define $D=X-Y$ and test $\mu_d=0$ using 
+	\[\frac{\bar D}{S_d/\sqrt n}\sim t_{n-1}\]
 \end{multicols*}
 \end{document}
